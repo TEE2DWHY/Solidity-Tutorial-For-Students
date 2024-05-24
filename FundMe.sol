@@ -11,7 +11,7 @@ contract FundMe{
     int mininumUsd = 50;
     address owner;
 
-    constructor() { // every logic inside a constructor and is triggered on deployment
+    constructor() { // every logic inside a constructor  is triggered on deployment
         owner = msg.sender;
     }
 
