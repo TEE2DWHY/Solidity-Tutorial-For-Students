@@ -44,3 +44,5 @@ contract FundMe{
     // the amount that a person sends in a paybale function is known as the msg.value;
     // we use a require statement when we want to ensure a condition in our contract functions
 }
+
+// https://sepolia.etherscan.io/address/0xa4d8876681dc8fb1b6de3fd64b1f845ce1d63581 (Demo contract where i tested all functions :Please do the same - Take Home task)
