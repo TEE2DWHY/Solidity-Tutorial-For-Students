@@ -31,9 +31,9 @@ contract FundMe{
         // bool success = payable(msg.sender).send(address(this).balance);
         // require(success, "Sending failed.");
         // The call method:
-        require(address(this).balance > 0 , "Insufficient Balance");
-        (bool success,) =  payable(msg.sender).call{value: address(this).balance}("");
-        require(success, "Withdrawal failed");
+        // require(address(this).balance > 0 , "Insufficient Balance");
+        // (bool success,) =  payable(msg.sender).call{value: address(this).balance}("");
+        // require(success, "Withdrawal failed");
     }
 // -----------------------------------------------------------------------------------------------------------------------------------------------------
     //transfer: Use for simple, secure transfers where 2300 gas is sufficient (especially for EOA (externally owned addresses). 
