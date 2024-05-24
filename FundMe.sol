@@ -25,8 +25,21 @@ contract FundMe{
 
     function withdraw() public payable  {
         require(msg.sender == owner, "Only owner can withdraw funds");
+        // Transfer all Ether in the contract to the owner (transfer method):
+        payable(msg.sender).transfer(address(this).balance);
+        // The send method:
+        // bool success = payable(msg.sender).send(address(this).balance);
+        // require(success, "Sending failed.");
+        // The call method:
+        require(address(this).balance > 0 , "Insufficient Balance");
+        (bool success,) =  payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Withdrawal failed");
     }
-
+// -----------------------------------------------------------------------------------------------------------------------------------------------------
+    //transfer: Use for simple, secure transfers where 2300 gas is sufficient (especially for EOA (externally owned addresses). 
+    //send: Use if you need to handle the success/failure of the transfer manually but still want to stick to 2300 gas.
+    //call: Use for flexibility with gas and complex interactions, ensuring you follow security best practices to avoid reentrancy attacks.
+// -------------------------------------------------------------------------------------------------------------------------------------------------
     // a person that calls a function is known as the msg.sender; (address)
     // the amount that a person sends in a paybale function is known as the msg.value;
     // we use a require statement when we want to ensure a condition in our contract functions
