@@ -16,7 +16,7 @@ contract PriceConverter {
         );
     }
    
-    function getPrice() public view returns (int) {
+    function getPrice() public view returns (uint) {
         (
             /* uint80 roundID */,
             int answer, 
@@ -24,14 +24,12 @@ contract PriceConverter {
             /*uint timeStamp*/,
             /*uint80 answeredInRound*/
         ) = dataFeed.latestRoundData();
-        return answer * 1e10;
+        return uint(answer * 1e10);
     }
 
-    function getConversionRate(int ethAmount) public view returns (int) {
-       int ethPrice = getPrice();
-       int amountInUsd = ethAmount * ethPrice / 1e18 ; //(we have to divide by 1e18 since eth price is returned in wei (1e18)
+    function getConversionRate(uint ethAmount) public view returns (uint) {
+       uint ethPrice = getPrice();
+       uint amountInUsd = ethAmount * ethPrice / 1e18 ; //(we have to divide by 1e18 since eth price is returned in wei (1e18)
        return amountInUsd;
     }
-
-   
 }
