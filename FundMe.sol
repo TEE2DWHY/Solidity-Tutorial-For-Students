@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-error NotOwner(address owner);  
+error NotOwner(address owner); 
+error  BalanceCannotBeZero(); 
 // core function: 1. Recieve funds 2. Withdraw Funds 2*. Only the owner of the contract can withdraw funds
 // ** the minimum amount of money that we can recieve is 1 ETH (the amount that we recieve is in USD - Blockchain oracle)
 
@@ -12,7 +13,7 @@ contract FundMe{
     uint256 constant MINIMUM_USD = 50;
     address immutable i_owner; // declared immutable for gas efficiency
     address[] public funders;
-    mapping(address => uint256) public amountFunded;
+    mapping(address => uint256) s_amountFunded;
 
     constructor() { // every logic inside a constructor is triggered on deployment
         i_owner = msg.sender;
@@ -22,7 +23,7 @@ contract FundMe{
         uint256 amountInUsd = priceConverter.getConversionRate((msg.value));
         require(amountInUsd >= MINIMUM_USD , "Insufficient amount sent");
         funders.push(msg.sender);
-        amountFunded[msg.sender] += (msg.value);
+        s_amountFunded[msg.sender] += (msg.value);
     }
 
     function getConverstionRate(uint256 ethAmount) public view returns (uint256){ // call the getConversion here just to see
@@ -30,6 +31,10 @@ contract FundMe{
     }
 
     function withdraw() public payable onlyOwner {
+        uint256 contractBalance = address(this).balance;
+        if(contractBalance < 0){
+            revert BalanceCannotBeZero();
+        }
         // Transfer all Ether in the contract to the owner (transfer method):
         payable(msg.sender).transfer(address(this).balance);
         // The send method:
@@ -42,7 +47,7 @@ contract FundMe{
     }
 
     function getFundedAmount(address user) public view returns(uint256){
-        return amountFunded[user];
+        return s_amountFunded[user];
     }
 
     receive() external payable { // This is a special function that enables a contract to receive Ether (just in case someone sends money to our contract without calling the fund function). It does not have the function keyword because it is an anonymous function with specific behavior and requirements defined by the Solidity language. 
@@ -68,4 +73,4 @@ contract FundMe{
     // we use a require statement when we want to ensure a condition in our contract functions
 }
 
-// https://sepolia.etherscan.io/address/0x5608e233ed53ed3cd389b7d97cd323f8a49c7176 (Demo contract where i tested all functions :Please do the same - Take Home task)
+// https://sepolia.etherscan.io/address/0xa4d8876681dc8fb1b6de3fd64b1f845ce1d63581 (Demo contract where i tested all functions :Please do the same - Take Home task)
