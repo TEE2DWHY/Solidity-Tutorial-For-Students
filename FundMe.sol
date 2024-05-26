@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-error NotOwner(address owner); 
-error  BalanceCannotBeZero(); 
 // core function: 1. Recieve funds 2. Withdraw Funds 2*. Only the owner of the contract can withdraw funds
 // ** the minimum amount of money that we can recieve is 1 ETH (the amount that we recieve is in USD - Blockchain oracle)
-// values are often given in Wei to avoid floating-point arithmetic issues.
+// values are often given in Wei to avoid floating-point arithmetic issues (e.g rounding up issues).
+// Wei is the smallest denomination of Ether (ETH), the native cryptocurrency of the Ethereum blockchain. Just as a dollar is divided into 100 cents, an Ether is divided into 10**18 Wei
 
 import "contracts/PriceConverter.sol";
 
 contract FundMe{
     PriceConverter priceConverter = new PriceConverter();
-    uint256 constant MINIMUM_USD = 50;
+    uint256 constant MINIMUM_USD = 50 * 1e18;
     address immutable i_owner; // declared immutable for gas efficiency
     address[] public funders;
     mapping(address => uint256) s_amountFunded;
@@ -19,10 +18,11 @@ contract FundMe{
     constructor() { // every logic inside a constructor is triggered on deployment
         i_owner = msg.sender;
     }
+    
 
     function fund() public payable   {
-        uint256 amountInUsd = priceConverter.getConversionRate((msg.value));
-        require(amountInUsd >= MINIMUM_USD , "Insufficient amount sent");
+        uint256 amountInUsd = priceConverter.getConversionRate(msg.value);
+        require(amountInUsd  > MINIMUM_USD , "Insufficient amount sent");
         funders.push(msg.sender);
         s_amountFunded[msg.sender] += (msg.value);
     }
@@ -33,9 +33,7 @@ contract FundMe{
 
     function withdraw() public payable onlyOwner {
         uint256 contractBalance = address(this).balance;
-        if(contractBalance < 0){
-            revert BalanceCannotBeZero();
-        }
+       require(contractBalance != 0, "Contract has no balance");
         // Transfer all Ether in the contract to the owner (transfer method):
         payable(msg.sender).transfer(address(this).balance);
         // The send method:
@@ -56,9 +54,7 @@ contract FundMe{
     }
 
     modifier onlyOwner(){
-       if(msg.sender != i_owner){
-            revert NotOwner(i_owner); // gas-efficient error handling
-       }
+        require(msg.sender == i_owner, "Only owner can withdraw funds");
        _;
     }
 // ---------------------------------------------------------------------------------------------------------------------------------------------------
