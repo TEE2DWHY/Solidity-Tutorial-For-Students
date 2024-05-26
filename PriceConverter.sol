@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract PriceConverter {
     AggregatorV3Interface internal dataFeed;
+
     /**
      * Network: Sepolia
      * Aggregator: ETH/USD
@@ -15,7 +16,7 @@ contract PriceConverter {
            0x694AA1769357215DE4FAC081bf1f309aDC325306
         );
     }
-   
+
     function getPrice() public view returns (uint256) {
         (
             /* uint80 roundID */,
@@ -29,7 +30,7 @@ contract PriceConverter {
 
     function getConversionRate(uint ethAmount) public view returns (uint256) {
        uint256 ethPrice = getPrice();
-       uint256 amountInUsd = ethAmount * ethPrice / 1e18 ; //(we have to divide by 1e18 since eth price is returned in wei (1e18)
+       uint256 amountInUsd = (ethAmount * ethPrice) / 1e18; //(we have to divide by 1e18 since eth price is returned in wei (1e18)
        return amountInUsd;
     }
 }
