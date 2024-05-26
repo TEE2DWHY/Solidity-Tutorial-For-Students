@@ -5,6 +5,7 @@ error NotOwner(address owner);
 error  BalanceCannotBeZero(); 
 // core function: 1. Recieve funds 2. Withdraw Funds 2*. Only the owner of the contract can withdraw funds
 // ** the minimum amount of money that we can recieve is 1 ETH (the amount that we recieve is in USD - Blockchain oracle)
+// values are often given in Wei to avoid floating-point arithmetic issues.
 
 import "contracts/PriceConverter.sol";
 
