@@ -5,7 +5,7 @@ pragma solidity ^0.8.25;
 // ** the minimum amount of money that we can recieve is 1 ETH (the amount that we recieve is in USD - Blockchain oracle)
 // values are often given in Wei to avoid floating-point arithmetic issues (e.g rounding up issues).
 // Wei is the smallest denomination of Ether (ETH), the native cryptocurrency of the Ethereum blockchain. Just as a dollar is divided into 100 cents, an Ether is divided into 10**18 Wei
-
+// the standard unit in samrtContract computation is wei
 import "contracts/PriceConverter.sol";
 
 contract FundMe{
