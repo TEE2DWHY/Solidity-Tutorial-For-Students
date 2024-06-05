@@ -1,0 +1,40 @@
+SETTING UP HARDHAT IN WINDOWS
+
+LIMITATIONS OF REMIX:
+- Requires an internet connection to function.
+- Unable to run tests directly within Remix.
+- Limited to working with smart contracts only and cannot integrate with other locations.
+
+STEPS TO SET UP HARDHAT IN WINDOWS:
+
+1. INSTALL WINDOWS SUBSYSTEM FOR LINUX (WSL):
+   - Install WSL from Microsoft's official documentation: https://learn.microsoft.com/en-us/windows/wsl/install
+   - Restart your PC after the installation.
+
+2. INSTALL REMOTE DEVELOPMENT IN VSCODE:
+   - Open Visual Studio Code.
+   - Install the "Remote - WSL" extension from the Extensions view (Ctrl+Shift+X).
+   - This extension enables working with VSCode in a WSL environment.
+
+3. INSTALL NODE.JS IN WSL:
+   - Open your WSL terminal.
+   - Install Node Version Manager (NVM) by running:
+     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+   - Close and reopen the terminal or run 'source ~/.bashrc' after installation.
+   - Install Node.js using NVM:
+     nvm install <NODE_VERSION>
+     Replace <NODE_VERSION> with the desired Node.js version (e.g., 14).
+
+4. INSTALL HARDHAT:
+   - In the WSL terminal, run:
+     npm install -g hardhat
+   - This installs Hardhat globally on your system.
+
+5. INSTALL HARDHAT SHORTHAND:
+   - To use the shorthand 'hh' instead of 'npx hardhat', install Hardhat Shorthand globally:
+     npm install --global hardhat-shorthand
+
+6. INITIALIZE HARDHAT:
+   - Initialize Hardhat in your project directory:
+     npx hardhat init
+   - This sets up Hardhat in your project and creates necessary files and directories.
