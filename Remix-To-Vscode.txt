@@ -13,7 +13,7 @@ STEPS TO SET UP HARDHAT IN WINDOWS:
 
 2. INSTALL REMOTE DEVELOPMENT IN VSCODE:
    - Open Visual Studio Code.
-   - Install the "Remote - WSL" extension from the Extensions view (Ctrl+Shift+X).
+   - Install the "Remote - WSL" extension from the Extensions view In VsCode(Ctrl+Shift+X).
    - This extension enables working with VSCode in a WSL environment.
 
 3. INSTALL NODE.JS IN WSL:
