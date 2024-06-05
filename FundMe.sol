@@ -70,43 +70,6 @@ contract FundMe{
     // we use a require statement when we want to ensure a condition in our contract functions
 }
 
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.25;
-
-import "contracts/PriceConverter.sol";
-
-contract FundMe{
-    using PriceConverter for uint256;
-    uint256 minmumUsd = 50 * 1e18;
-    address owner;
-    address[] public funders;
-    mapping(address => uint256) public amountFunded; 
-    // we have to track every funder (address);
-    // we want to also know how much they funded;
-    // tolu from colamrud sends 55$ and tomorrow she sends 60$ == tolu = $115
-
-    constructor(){  // is going to run on deployment only once
-        owner = msg.sender;
-    }
-
-
-    function fund() public payable {
-       uint256 amountInUsd = msg.value.getConversionRate();
-        require(amountInUsd >= minmumUsd, "Insufficient Funds");
-        funders.push(msg.sender); // adds a person that funds to the fund array.
-        amountFunded[msg.sender] += msg.value;
-    }
-
-    function withdraw(uint256 amount) public payable {
-        require(msg.sender == owner, "Not Owner");
-        uint256 contractBalance = address(this).balance;
-        require(contractBalance >= amount, "Insufficient Contract Balance");
-        //require(contractBalance !=0, "Contract Has No Balance");
-        payable(msg.sender).transfer(amount);
-    }
-
-    receive() external payable {}
-}
 
 // using the price converter as a library
 // SPDX-License-Identifier: MIT
