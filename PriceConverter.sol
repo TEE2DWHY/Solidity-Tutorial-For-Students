@@ -36,7 +36,7 @@ contract PriceConverter {
 }
 
 
-// using price converter as 
+// using price converter as a library: Libraries are stateless 
 // // SPDX-License-Identifier: MIT
 // pragma solidity ^0.8.7;
 
