@@ -8,7 +8,7 @@ This repository contains a basic introduction to Solidity, the high-level progra
 
 ## Usage
 
-### Using Remix
+### Introduction to Solidity
 
 Everything carried out in this introduction section was purely carried out on Remix, an online Solidity IDE available at [https://remix.ethereum.org/](https://remix.ethereum.org/). Remix provides a user-friendly environment for writing, deploying, and testing Solidity smart contracts directly in your web browser.
 
