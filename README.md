@@ -34,11 +34,11 @@ The purpose of this repository is to lay the very basic foundation and deeper in
 
 ## Sections
 
-### Introduction to Solidity
+### 1.Introduction to Solidity
 
 Everything carried out in this introduction section was purely carried out on Remix, an online Solidity IDE available at [https://remix.ethereum.org/](https://remix.ethereum.org/). Remix provides a user-friendly environment for writing, deploying, and testing Solidity smart contracts directly in your web browser.
 
-### Moving to Hardhat
+### 2.Moving to Hardhat
 
 ## Contributions
 
