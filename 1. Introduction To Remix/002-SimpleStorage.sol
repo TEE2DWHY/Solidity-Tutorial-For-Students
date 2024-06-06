@@ -9,11 +9,11 @@ contract SimpleStorage {
     // we just initialized our contract
     int256 bestNumber; // ?? this hardcodes the value of best number - Global Scoped Variable
 
-    function setBestNumber(int256 _newBestNumber, int256 _newAge) public {
+    function setBestNumber(int256 _newBestNumber) public {
         //write method
         bestNumber = _newBestNumber;
-        int256 age = 20;
-        age = _newAge; // local scope variable
+        // int256 age = 20;
+        // age = _newAge; // local scope variable
     }
 
     function getBestNumber() public view returns (int256) {
