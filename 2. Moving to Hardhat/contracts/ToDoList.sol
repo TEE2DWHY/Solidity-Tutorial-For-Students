@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-error NotOwner(address owner);
+error TaskAlreadyCompleted();
 
 contract ToDoList {
     //events in solidity are a means  of alerting external apps that an event has occurred
@@ -21,8 +21,8 @@ contract ToDoList {
     //  CONTRACT FOR FUNCTIONS
     // 1. Create a task
     // 2. Users to Update the state of the task
-    // 3. Get all the task associated with a Users
-    // 4. Get a task by Id
+    // 3. Get all the task associated with a User
+    // 4. Get a user task by Id
     // 5. Delete the task *
 
     // string taskName;
@@ -38,11 +38,9 @@ contract ToDoList {
 
     Task[] private tasks;
 
-    mapping(uint256 => mapping(address => Task)) public getTaskByTaskId;
+    mapping(uint256 => mapping(address => Task)) private getTaskByTaskId;
 
-    mapping(address => Task) public getTaskByOwner;
-
-    mapping(address => Task[]) public listOfTasks;
+    mapping(address => Task[]) private listOfTasks;
 
     function createTask(uint256 _taskId, string memory _taskName) public {
         // taskId
@@ -54,20 +52,18 @@ contract ToDoList {
         task.taskName = _taskName;
         task.isTaskCompleted = false;
         task.owner = msg.sender;
-        getTaskByOwner[msg.sender] = task;
         getTaskByTaskId[task.id][msg.sender] = task;
         listOfTasks[msg.sender].push(task);
     }
 
-    function updateTaskState(uint256 _taskId) public {
+    function updateTaskState(uint256 _taskId, bool currentState) public {
         // we need to get the task;
         // isTaskCompleted = true;
         Task memory task = getTaskByTaskId[_taskId][msg.sender];
-        if (task.owner != msg.sender) {
-            // ensures that only the owner of a task can update it
-            revert NotOwner(task.owner);
+        if (task.isTaskCompleted) {
+            revert TaskAlreadyCompleted();
         }
-        getTaskByTaskId[_taskId][msg.sender].isTaskCompleted = true;
+        getTaskByTaskId[_taskId][msg.sender].isTaskCompleted = currentState;
     }
 
     function getTaskById(
