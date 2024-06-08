@@ -36,8 +36,6 @@ contract ToDoList {
         address owner;
     }
 
-    Task[] private tasks;
-
     mapping(uint256 => mapping(address => Task)) private getTaskByTaskId;
 
     mapping(address => Task[]) private listOfTasks;
