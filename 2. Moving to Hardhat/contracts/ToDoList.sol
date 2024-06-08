@@ -36,8 +36,6 @@ contract ToDoList {
         address owner;
     }
 
-    mapping(uint256 => mapping(address => Task)) private getTaskByTaskId;
-
     mapping(address => Task[]) private listOfTasks;
 
     event CreatedTask(
@@ -72,26 +70,30 @@ contract ToDoList {
         task.taskName = _taskName;
         task.isTaskCompleted = false;
         task.owner = msg.sender;
-        getTaskByTaskId[task.id][msg.sender] = task;
+        // getTaskByTaskId[task.id][msg.sender] = task;
         listOfTasks[msg.sender].push(task);
         emit CreatedTask(_taskId, _taskName, task.isTaskCompleted, msg.sender);
     }
 
     function completed(uint256 _taskId) public {
-        // we need to get the task;
-        // isTaskCompleted = true;
-        Task storage task = getTaskByTaskId[_taskId][msg.sender]; // get task associated with user by taskId
-        //(task here is used as storage not memory because we want to directly updates the task's completion status in storage, reflecting the change in the contract's state)
-        if (task.isTaskCompleted) {
-            revert TaskAlreadyCompleted(); // revert with custom error just incase the task has already been marked as completed
+        Task storage task; // Declare storage variable
+        for (uint256 i = 0; i < listOfTasks[msg.sender].length; i++) {
+            if (listOfTasks[msg.sender][i].id == _taskId) {
+                // check if the taskId matches any of the existing taskId
+                task = listOfTasks[msg.sender][i];
+                if (task.isTaskCompleted) {
+                    revert TaskAlreadyCompleted(); // Revert if task is already completed
+                }
+                task.isTaskCompleted = true; // Mark the task as completed
+                emit UpdatedTask(
+                    task.id,
+                    task.taskName,
+                    task.isTaskCompleted,
+                    task.owner
+                );
+                break;
+            }
         }
-        task.isTaskCompleted = true; // update task state to true
-        emit UpdatedTask( // emit event
-            task.id,
-            task.taskName,
-            task.isTaskCompleted,
-            task.owner
-        );
     }
 
     function deleteTask(uint256 _taskId) public {
@@ -99,32 +101,37 @@ contract ToDoList {
         // we need to check if the taskId matches any available tasks with the same taskId
         // if true we need to move the task to be deleted to the last on the user task array
         // we need to use the .pop method to delete the task
-        Task memory task = getTaskByTaskId[_taskId][msg.sender]; // get the task that matches the taskId by user
-        for (_taskId = 0; _taskId < listOfTasks[msg.sender].length; _taskId++) {
+        Task storage task; // get the task that matches the taskId by user
+        for (uint256 i = 0; i < listOfTasks[msg.sender].length; i++) {
             //loop through the user tasks
-            if (listOfTasks[msg.sender][_taskId].id == task.id) {
+            if (listOfTasks[msg.sender][i].id == _taskId) {
                 // check if the taskId matches the list of user tasksIds
-                listOfTasks[msg.sender][_taskId] = listOfTasks[msg.sender][
+                task = listOfTasks[msg.sender][i];
+                task = listOfTasks[msg.sender][
                     listOfTasks[msg.sender].length - 1
                 ]; // move the task that matches the taskId to the end of the user task array
                 listOfTasks[msg.sender].pop(); // remove the task using the pop method
+                emit DeletedTask( //emit the deleted task
+                    task.id,
+                    task.taskName,
+                    task.isTaskCompleted,
+                    task.owner
+                );
                 break; // terminate the loop as there is no need to keep iterating
             }
         }
-        emit DeletedTask( //emit the deleted task
-            task.id,
-            task.taskName,
-            task.isTaskCompleted,
-            task.owner
-        );
     }
 
-    function getTaskById(
-        uint256 _taskId,
-        address owner
-    ) public view returns (uint256, string memory, bool, address) {
-        Task memory task = getTaskByTaskId[_taskId][owner];
-        return (task.id, task.taskName, task.isTaskCompleted, task.owner);
+    function getTaskById(uint256 _taskId) public view returns (Task memory) {
+        Task memory task;
+        for (uint256 i = 0; i < listOfTasks[msg.sender].length; i++) {
+            if (listOfTasks[msg.sender][i].id == _taskId) {
+                task = listOfTasks[msg.sender][i];
+                break;
+            }
+        }
+
+        return task;
     }
 
     function getAllUserTask(address user) public view returns (Task[] memory) {

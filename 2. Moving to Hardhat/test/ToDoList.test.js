@@ -25,7 +25,7 @@ const { assert, expect } = require("chai");
         });
         it("should return the task associated with a user taskId", async () => {
           const taskId = 2;
-          const task = await ToDoList.getTaskById(taskId, user.address);
+          const task = await ToDoList.getTaskById(taskId);
           console.log(task);
         });
         it("should return all the task associated with a specific user", async () => {
@@ -41,26 +41,17 @@ const { assert, expect } = require("chai");
 
         it("should set the state of the task to true", async () => {
           const taskId = 1;
-          const previousTaskState = await ToDoList.getTaskById(
-            taskId,
-            user.address
-          );
+          const previousTaskState = await ToDoList.getTaskById(taskId);
           console.log("Previous Task State:", previousTaskState);
           await ToDoList.connect(user).completed(taskId);
-          const currentTaskState = await ToDoList.getTaskById(
-            taskId,
-            user.address
-          );
+          const currentTaskState = await ToDoList.getTaskById(taskId);
           console.log("Current Task State", currentTaskState);
         });
 
         it("should throw an error if user tries to re-update an already completed task", async () => {
           const taskId = 1;
           await ToDoList.connect(user).completed(taskId);
-          const currentTaskState = await ToDoList.getTaskById(
-            taskId,
-            user.address
-          );
+          const currentTaskState = await ToDoList.getTaskById(taskId);
           console.log(currentTaskState);
           await expect(
             ToDoList.connect(user).completed(taskId)
