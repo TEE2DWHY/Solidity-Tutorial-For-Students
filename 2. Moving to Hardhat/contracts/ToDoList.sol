@@ -42,11 +42,26 @@ contract ToDoList {
 
     mapping(address => Task[]) private listOfTasks;
 
+    event CreatedTask(
+        uint256 taskId,
+        string indexed taskName,
+        bool isTaskCompleted,
+        address indexed owner
+    );
+
+    event UpdatedTask(
+        uint256 taskId,
+        string indexed taskName,
+        bool isTaskCompleted,
+        address indexed owner
+    );
+
     function createTask(uint256 _taskId, string memory _taskName) public {
         // taskId
         //what task?
         //status of the task
         //the user that creates the task
+        // emit the created task
         Task memory task;
         task.id = _taskId;
         task.taskName = _taskName;
@@ -54,6 +69,7 @@ contract ToDoList {
         task.owner = msg.sender;
         getTaskByTaskId[task.id][msg.sender] = task;
         listOfTasks[msg.sender].push(task);
+        emit CreatedTask(_taskId, _taskName, task.isTaskCompleted, msg.sender);
     }
 
     function updateTaskState(uint256 _taskId, bool currentState) public {
@@ -64,6 +80,12 @@ contract ToDoList {
             revert TaskAlreadyCompleted();
         }
         getTaskByTaskId[_taskId][msg.sender].isTaskCompleted = currentState;
+        emit UpdatedTask(
+            task.id,
+            task.taskName,
+            task.isTaskCompleted,
+            task.owner
+        );
     }
 
     function getTaskById(
