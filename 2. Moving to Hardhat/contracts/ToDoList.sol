@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+// custom errors
 error TaskAlreadyCompleted();
+error NotOwner();
+error InvalidTaskId(uint256 taskId);
+error NoTaskFound(address);
 
 contract ToDoList {
     //events in solidity are a means  of alerting external apps that an event has occurred
@@ -70,12 +74,11 @@ contract ToDoList {
         task.taskName = _taskName;
         task.isTaskCompleted = false;
         task.owner = msg.sender;
-        // getTaskByTaskId[task.id][msg.sender] = task;
         listOfTasks[msg.sender].push(task);
         emit CreatedTask(_taskId, _taskName, task.isTaskCompleted, msg.sender);
     }
 
-    function completed(uint256 _taskId) public {
+    function completed(uint256 _taskId) public isOwner(_taskId) {
         Task storage task; // Declare storage variable
         for (uint256 i = 0; i < listOfTasks[msg.sender].length; i++) {
             if (listOfTasks[msg.sender][i].id == _taskId) {
@@ -96,7 +99,7 @@ contract ToDoList {
         }
     }
 
-    function deleteTask(uint256 _taskId) public {
+    function deleteTask(uint256 _taskId) public isOwner(_taskId) {
         // we need to iterate through all the available task
         // we need to check if the taskId matches any available tasks with the same taskId
         // if true we need to move the task to be deleted to the last on the user task array
@@ -122,19 +125,53 @@ contract ToDoList {
         }
     }
 
-    function getTaskById(uint256 _taskId) public view returns (Task memory) {
+    function getTaskById(
+        // get the task by Id associated with a particular user
+        uint256 _taskId,
+        address owner
+    ) public view isOwner(_taskId) returns (Task memory) {
         Task memory task;
-        for (uint256 i = 0; i < listOfTasks[msg.sender].length; i++) {
+        for (uint256 i = 0; i < listOfTasks[owner].length; i++) {
             if (listOfTasks[msg.sender][i].id == _taskId) {
                 task = listOfTasks[msg.sender][i];
                 break;
             }
         }
-
         return task;
     }
 
     function getAllUserTask(address user) public view returns (Task[] memory) {
+        Task memory currentTask;
+        bool isActiveUser;
+        for (uint256 i = 0; i < listOfTasks[msg.sender].length; i++) {
+            currentTask = listOfTasks[msg.sender][i];
+            if (currentTask.owner == user) {
+                isActiveUser = true;
+                break;
+            }
+        }
+        if (!isActiveUser) {
+            revert NoTaskFound(user);
+        }
         return listOfTasks[user];
+    }
+
+    modifier isOwner(uint256 _taskId) {
+        Task storage currentTask;
+        bool isTaskFound = false;
+        for (uint256 i = 0; i < listOfTasks[msg.sender].length; i++) {
+            currentTask = listOfTasks[msg.sender][i];
+            if (currentTask.id == _taskId) {
+                isTaskFound = true;
+                if (msg.sender != currentTask.owner) {
+                    revert NotOwner();
+                }
+                break;
+            }
+        }
+        if (!isTaskFound) {
+            revert InvalidTaskId(_taskId);
+        }
+        _;
     }
 }
