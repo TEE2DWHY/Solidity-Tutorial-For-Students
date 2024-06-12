@@ -10,9 +10,9 @@ const getTaskById = async () => {
     console.log("Contract Address:", contract.target);
     console.log("---------------------------------");
     console.log("--------creating task---------------");
-    const tx = await contract.connect(user2).createTask(1, "I want to Sweep");
+    await contract.connect(user2).createTask(1, "I want to Sweep");
     // console.log(tx);
-    const task = await contract.getTaskByIds(0);
+    const task = await contract.getTaskByNumber(1);
     console.log(task);
   } catch (error) {
     console.log(error.message);

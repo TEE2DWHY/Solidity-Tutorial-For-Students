@@ -1,10 +1,12 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
+require("hardhat-gas-reporter");
 /** @type import('hardhat/config').HardhatUserConfig */
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const PROVIDER_URL = process.env.PROVIDER_URL;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY;
 
 module.exports = {
   defaultNetwork: "hardhat",
@@ -20,6 +22,11 @@ module.exports = {
     },
   },
   solidity: "0.8.19",
+  gasReporter: {
+    currency: "USD", //your preferred currency could be EUR (EURO)
+    L1: "polygon", // your layer one currency name here
+    coinmarketcap: COINMARKETCAP_API_KEY,
+  },
   etherscan: {
     apiKey: ETHERSCAN_API_KEY, // to verify contracts
   },

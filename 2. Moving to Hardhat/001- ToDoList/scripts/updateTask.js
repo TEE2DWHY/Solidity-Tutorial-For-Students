@@ -10,9 +10,8 @@ const updateTask = async () => {
     console.log("Contract Address:", contract.target);
     console.log("---------------------------------");
     console.log("--------creating task---------------");
-    const tx = await contract.connect(user).createTask(1, "I want to Sweep");
-    console.log(tx);
-    const updateTx = await contract.connect(user).updateTaskState(0);
+    await contract.connect(user).createTask(1, "I want to Sweep");
+    const updateTx = await contract.connect(user).completed(0);
     console.log(updateTx);
   } catch (error) {
     console.log(error.message);

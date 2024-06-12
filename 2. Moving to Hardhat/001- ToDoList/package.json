@@ -5,6 +5,7 @@
     "hardhat": "^2.22.5"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "hardhat-gas-reporter": "^2.2.0"
   }
 }
