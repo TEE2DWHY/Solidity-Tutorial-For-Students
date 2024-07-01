@@ -10,7 +10,7 @@ contract BanjoBoss is ERC20 {
     }
 }
 
-// https://sepolia.etherscan.io/address/0x164994581Cd8711bFefe730555aA5365d19097b8#code
+// https://sepolia.etherscan.io/address/0x4eed3374646Ac50c42426f44Eb9050C1335648A5#code
 
 // OVERRIDES: https://medium.com/upstate-interactive/solidity-override-vs-virtual-functions-c0a5dfb83aaf
 // NFT
