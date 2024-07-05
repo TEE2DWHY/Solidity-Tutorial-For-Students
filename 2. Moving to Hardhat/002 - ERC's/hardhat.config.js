@@ -24,7 +24,7 @@ module.exports = {
   solidity: "0.8.20",
   gasReporter: {
     currency: "USD", //your preferred currency could be EUR (EURO)
-    L1: "polygon", // your layerOne (L1) currency name here (e.g ethereum, polygon)
+    L1: "ethereum", // your layerOne (L1) currency name here (e.g ethereum, polygon)
     coinmarketcap: COINMARKETCAP_API_KEY,
   },
   etherscan: {

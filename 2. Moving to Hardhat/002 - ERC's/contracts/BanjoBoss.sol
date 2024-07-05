@@ -15,3 +15,5 @@ contract BanjoBoss is ERC20 {
 // OVERRIDES: https://medium.com/upstate-interactive/solidity-override-vs-virtual-functions-c0a5dfb83aaf
 // NFT
 //NFT MARKETPLACE
+//GAS OPTIMIZATION
+// RE-ENTRANCY ATTACK
