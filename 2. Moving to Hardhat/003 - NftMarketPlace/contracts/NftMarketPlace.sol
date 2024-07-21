@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 error NftMarketPlace__PriceCannotBeZero();
 error NftMarketPlace__NftNotApprovedByNftMarketPlace();
 error NftMarketPlace__NotOwner(address owner);
 error NftMarketPlace__NotListed(uint256 tokenId);
 error NftMarketPlace__PriceNotMet();
+error NftMarketPlace__NoProceeds();
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract NftMarketPlace {
@@ -84,6 +85,23 @@ contract NftMarketPlace {
         isOwner(nftAddress, tokenId, msg.sender)
     {
         delete s_listings[nftAddress][tokenId];
+    }
+
+    function getListing(
+        address nftAddress,
+        uint256 tokenId
+    ) external view returns (Listing memory) {
+        return s_listings[nftAddress][tokenId];
+    }
+
+    function withdrawProceeds() external {
+        uint256 proceeds = s_proceeds[msg.sender];
+        if (proceeds <= 0) {
+            revert NftMarketPlace__NoProceeds();
+        }
+        s_proceeds[msg.sender] = 0;
+        (bool success, ) = payable(msg.sender).call{value: proceeds}("");
+        require(success, "Transfer Failed");
     }
 
     // 0chdhffhfxhfhfhf==>delete ==>>0x00000000000000000000
