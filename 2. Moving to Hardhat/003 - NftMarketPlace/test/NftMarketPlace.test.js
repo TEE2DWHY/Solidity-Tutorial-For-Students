@@ -88,7 +88,7 @@ const developmentChains = require("../../002 - ERC's/utils/hardhat-helper");
           );
         });
 
-        it("should increment the seller proceed after withdrawal", async () => {
+        it("should increment the seller balance after proceed withdrawal", async () => {
           const initialBalance = await ethers.provider.getBalance(
             owner.address
           );
