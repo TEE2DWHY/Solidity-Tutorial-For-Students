@@ -76,4 +76,49 @@ const developmentChains = require("../../002 - ERC's/utils/hardhat-helper");
           );
         });
       });
+
+      describe("Withdraw Proceeds", async () => {
+        // before=>>> sold => default 0, when he sells successfully ==> + proceed
+        it("should revert if proceeds is zero", async () => {
+          await expect(
+            nftMarketPlace.connect(owner).withdrawProceeds()
+          ).to.be.revertedWithCustomError(
+            nftMarketPlace,
+            "NftMarketPlace__NoProceeds"
+          );
+        });
+
+        it("should increment the seller proceed after withdrawal", async () => {
+          const initialBalance = await ethers.provider.getBalance(
+            owner.address
+          );
+          await nftMarketPlace
+            .connect(owner)
+            .listNft(price, nftContract.target, tokenId);
+          await nftMarketPlace
+            .connect(buyer)
+            .buyNft(nftContract.target, tokenId, {
+              value: price,
+            });
+          await nftMarketPlace.connect(owner).withdrawProceeds();
+          const currentBalance = await ethers.provider.getBalance(
+            owner.address
+          );
+          expect(initialBalance).to.be.lessThan(currentBalance);
+        });
+
+        it("should check if proceed is zero after withdrawal", async () => {
+          await nftMarketPlace
+            .connect(owner)
+            .listNft(price, nftContract.target, tokenId);
+          await nftMarketPlace
+            .connect(buyer)
+            .buyNft(nftContract.target, tokenId, {
+              value: price,
+            });
+          await nftMarketPlace.connect(owner).withdrawProceeds();
+          const proceeds = await nftMarketPlace.getProceeds(owner.address);
+          assert.equal(proceeds, 0);
+        });
+      });
     });

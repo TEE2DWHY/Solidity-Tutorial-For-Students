@@ -94,6 +94,10 @@ contract NftMarketPlace {
         return s_listings[nftAddress][tokenId];
     }
 
+    function getProceeds(address seller) external view returns (uint256) {
+        return s_proceeds[seller];
+    }
+
     function withdrawProceeds() external {
         uint256 proceeds = s_proceeds[msg.sender];
         if (proceeds <= 0) {
@@ -128,3 +132,5 @@ contract NftMarketPlace {
         _;
     }
 }
+
+// https://sepolia.etherscan.io/address/0x337D28D00E2655dc45E19AC07b2ca30B993bC438#code
