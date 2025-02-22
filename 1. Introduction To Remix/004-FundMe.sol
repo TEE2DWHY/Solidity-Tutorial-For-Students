@@ -51,6 +51,11 @@ contract FundMe{
 
     receive() external payable { // This is a special function that enables a contract to receive Ether (just in case someone sends money to our contract without calling the fund function). It does not have the function keyword because it is an anonymous function with specific behavior and requirements defined by the Solidity language. 
         // code to execute when Ether is sent to the contract (can also be left empty)
+        fund();
+    }
+
+    fallback() external payable{
+        fund();
     }
 
     modifier onlyOwner(){
